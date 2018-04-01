@@ -1,98 +1,73 @@
 #include <stdio.h>
+#include <stdlib.h>
+#define MAX_SIZE 1024
 
-/*
- large number formats
-----------------------
-
-numbers are saved as an array of 1024 chars.
-each char represents one digit, and must be between 0 and base-1 (inclusive)
-
-the last digit (num[1023]) will be the least significant
-
-therefore, the array
- char num[1024] = {...}
-
-will represent the number
- sum {i = 0->1023} (num[1023-i] * base^i)
-
-*/
-
-
-/* 
-converts large number (saved as described at top of file) to string
-
-reads number from 'num'
-outputs number to 'str'
-(base is not needed for conversion)
-*/
-void to_string(char num[1024], char str[1025]){
-	/* saves whether a non-zero digit was encountered */
-	char non_zero = 0;
-	/* index for num */
-	int i;
-	/* index for str */
-	int j;
-	/* list of digits */
-	char digits[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-	
-	
-	for(i=0,j=0;i<1024; i++){
-		/* this condition will remove all zeros at the begining of the number */
-		if(non_zero ||  num[i]){
-			/* write digit */
-			str[j] = digits[(int) num[i]];
-			/* non zero digit encountered */
-			non_zero = 1;
-			/* go to next string position */
-			j++;
+int main(void) {
+	int baseA=0, baseB=0, i, scanCheck=0, input_size=0, decimal_sum=0;
+	char input[MAX_SIZE], output[MAX_SIZE];
+	char c;
+	printf("Please enter the number's base:\n");
+	fflush(stdout);
+	scanCheck=scanf("%d",&baseA);
+	if(scanCheck==0){
+		printf("An error occurred!\n");
+		fflush(stdout);
+		return 0;
+	}
+	if(baseA<2 || baseA>16){
+		printf("Invalid input base\n");
+		fflush(stdout);
+		return 0;
+	}
+	printf("Please enter the desired base:\n");
+	fflush(stdout);
+	scanCheck=scanf("%d",&baseB);
+	if(scanCheck==0){
+		printf("An error occurred!\n");
+		fflush(stdout);
+		return 0;
+	}
+	if(baseB<2 || baseB>16){
+		printf("Invalid desired base\n");
+		fflush(stdout);
+		return 0;
+	}
+	printf("Please enter a number in base %d:\n",baseA);
+	fflush(stdout);
+	scanf("%s", input);
+	while(input[input_size]!='\0'){
+		c=input[input_size];
+		if('0'<=c && c<='9' && c<baseA+'0'){
+			input[input_size++]=c-'0';
+		}
+		else if('a'<=c && c<='a'+(baseA-10)){
+			input[input_size++]=c-'a'+10;
+		}
+		else if('A'<=c && c<='A'+(baseA-10)){
+			input[input_size++]=c-'A'+10;
+		}
+		else{
+			printf("Invalid number!\n");
+			fflush(stdout);
+			return 0;
 		}
 	}
-	
-	/* if all digits encountered were zero, insert 0 */
-	if(! non_zero){
-		str[j] = digits[0];
-		j++;
+	/*converting to decimal:*/
+	for(i=0,decimal_sum=0;i<input_size;i++){
+		decimal_sum=(decimal_sum*baseA)+input[i];
 	}
-	/* insert null character at end of string */
-	str[j] = '\0';
-}
-
-/*
-implements division of large number by small number
-
-
-num: the list of digits of input number (see large number format at top of file)
-out: list of digits of output number (out <- num/div)
-div: number to divide by
-base: base in which large numbers are saved
-
-returns: the remainder.
-
-NOTE: function would still work if num and out are the same variable, num would be overwritten.
-*/
-int divmod(char num[1024], char out[1024], int div, int base){
-	/* the value of all digits read from 'num'
-	   minus those writen to 'out' */
-	int collected = 0;
-	/* loop index */
-	int i;
-	
-	for(i = 0; i<1024; i++){
-		/* insert next digit to 'collected' */
-		collected *= base;
-		collected += num[i];
-		
-		/* calculate and write next output digit */
-		out[i] = collected / div;
-		
-		/* decrease the writen digit from collected */
-		collected %= div;
+	/*converting to baseB:*/
+	i=MAX_SIZE-1;
+	output[i--]='\0';
+	for(;i>=0 && decimal_sum>0;i--){
+		if(decimal_sum%baseB<10){
+			output[i]=decimal_sum%baseB+'0';
+		}
+		else output[i]=decimal_sum%baseB-10+'A';
+		decimal_sum/=baseB;
 	}
-	
-	/* the remainder remains in collected */
-	return collected;
-}
+	printf("The result is : %s\n",output+i+1);
+	fflush(stdout);
 
-int main(){
 	return 0;
 }
