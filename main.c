@@ -35,10 +35,10 @@ int main(void) {
 		if('0'<=c && c<='9' && c<baseA+'0'){
 			input[input_size++]=c-'0';
 		}
-		else if('a'<=c && c<='a'+(baseA-10)){
+		else if('a'<=c && c<'a'+(baseA-10)){
 			input[input_size++]=c-'a'+10;
 		}
-		else if('A'<=c && c<='A'+(baseA-10)){
+		else if('A'<=c && c<'A'+(baseA-10)){
 			input[input_size++]=c-'A'+10;
 		}
 		else{
@@ -51,6 +51,7 @@ int main(void) {
 		decimal_sum=(decimal_sum*baseA)+input[i];
 	}
 	/*converting to baseB:*/
+	
 	i=MAX_SIZE-1;
 	output[i--]='\0';
 	for(;i>=0 && decimal_sum>0;i--){
@@ -59,6 +60,10 @@ int main(void) {
 		}
 		else output[i]=decimal_sum%baseB-10+'A';
 		decimal_sum/=baseB;
+	}
+	/* if number is zero, a zero must be added */
+	if(i == MAX_SIZE-2){
+		output[i--] = '0';
 	}
 	printf("The result is : %s\n",output+i+1);
 	return 0;
