@@ -11,12 +11,10 @@ int main(void) {
 	scanCheck=scanf("%d",&baseA);
 	if(scanCheck==0){
 		printf("An error occurred!\n");
-		fflush(stdout);
 		return 0;
 	}
 	if(baseA<2 || baseA>16){
 		printf("Invalid input base\n");
-		fflush(stdout);
 		return 0;
 	}
 	printf("Please enter the desired base:\n");
@@ -24,16 +22,13 @@ int main(void) {
 	scanCheck=scanf("%d",&baseB);
 	if(scanCheck==0){
 		printf("An error occurred!\n");
-		fflush(stdout);
 		return 0;
 	}
 	if(baseB<2 || baseB>16){
 		printf("Invalid desired base\n");
-		fflush(stdout);
 		return 0;
 	}
 	printf("Please enter a number in base %d:\n",baseA);
-	fflush(stdout);
 	scanf("%s", input);
 	while(input[input_size]!='\0'){
 		c=input[input_size];
@@ -48,7 +43,6 @@ int main(void) {
 		}
 		else{
 			printf("Invalid number!\n");
-			fflush(stdout);
 			return 0;
 		}
 	}
@@ -67,7 +61,5 @@ int main(void) {
 		decimal_sum/=baseB;
 	}
 	printf("The result is : %s\n",output+i+1);
-	fflush(stdout);
-
 	return 0;
 }
